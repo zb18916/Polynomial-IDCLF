@@ -22,24 +22,18 @@ D{1}=0.1;
 D{2}=D{1};
 
 r=2;
-n=274;
+n=5;
 u=1.45;
 Cst=[];
-% T=0.60
+
 t_0=0.21;
 t_1=0.21;
 
-% gama=0.4838;
 
 %%
 
 
 I=[1  0;0  1]
-
-
-%设置变量，由于统一式子中左右两边会超出，
-%随意拉出一个n空间来给变量赋值。
-%后面若要调用变量，需要以test_begin+第几个变量（从0开始）。
 test_begin=3;
 test_end=n+test_begin;
 
@@ -47,7 +41,6 @@ test_end=n+test_begin;
 gama=sdpvar(1,1,'full');
 for i=test_begin:test_end
     v{i}=sdpvar(2,1,'full');
-    
     Cst=[Cst;v{i}>=0];
 end
 
@@ -94,14 +87,6 @@ LE2=E{2}'*v{test_begin}-u*v{test_end};
 Cst=[Cst;M1<=0;M2<=0;LE1<=0,LE2<=0];
 
 ops=sdpsettings('solver','mosek');
-
-% ops=sdpsettings('solver','gurobi');
-
-% ops=sdpsettings('solver','linprog'); 
-% solvesdp(C,[],ops)
 optimize(Cst,gama,ops);
-check(Cst)
-
-z=min(check(Cst))
 value(gama)
 
